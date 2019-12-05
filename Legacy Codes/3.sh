@@ -1,84 +1,61 @@
+Kode Sumber :
 clear
-i=0
-declare -a nama
-declare -a npm
-declare -a jur
+declare -a satu
+declare -a dua
+exit=0
 
-while :;
+while [ $exit -eq 0 ]
 do
- echo -e "Menu : \n\n1. Input\n2. View\n3. Search\n4. Exit\n"
- echo -n "Masukkan pilihan : "
- read pilih
+    echo "Program Matriks 2X2"
+    echo "1. Input pada Matriks (2x2)"
+    echo "2. Penjumlahan Matriks"
+    echo "3. Perkalian Matriks"
+    echo "4. Keluar Program"
+    echo -n "Masukan pilihan anda : "
+    read pilihan
 
- if (("$pilih" == 1));   # INPUT DATA
- then
-  clear
-  echo -n "Masukkan Nama    : "
-  read nama[$i]
-  echo -n "Masukkan NPM     : "
-  read npm[$i]
-  echo -n "Masukkan Jurusan : "
-  read jur[$i]
-  i=`expr $i + 1`
-  clear
-
- elif (("$pilih" == 2));   # TAMPILKAN DATA
- then
-  if (( i == 0))
-  then
-   clear
-   echo "Tidak ada data yang dapat ditampilkan"
-   read
-   clear
-  else
-   clear
-   echo -e "Data yang telah dimasukkan : \n"
-   for (( q=0; q<i;q++  ))
-   do
-    echo -e "Data ke $[q+1]\nNama    : ${nama[q]}\nNPM     : ${npm[q]}\nJurusan : ${jur[q]}\n"
-   done
-   read
-   clear
-  fi
-
- elif (("$pilih" == 3));   # CARI DATA
- then
-  if (( i == 0))
-  then
-   clear
-   echo "Tidak ada data yang dapat dicari"
-   read
-   clear
-  else
-   clear
-      echo -n "Masukkan NPM mahasiswa yang ingin dicari : "
-      read cari
-
-      k=0
-      while (($cari != ${npm[$k]}))
-      do
-    k=`expr $k + 1`
-      done
-
-   if (($cari == ${npm[$k]}));
-   then
-    echo -e "\nNama    : ${nama[k]}\nNPM     : ${npm[k]}\nJurusan : ${jur[k]}"
-
-   else
+    if [ $pilihan -eq 1 ]
+    then
     clear
-    echo -e "Data tidak ditemukan"
-   fi
-   read
-      clear
-  fi
+    echo "Masukkan Data Matriks 1"
 
- elif (( "$pilih" != 4 && "$pilih" != 2 && "$pilih" != 1 && "$pilih" !=       3  ));   # APABILA MEMBERIKAN MASUKAN SELAIN 1-4
- then
-  echo "Pilihan tidak valid"
-  read
-  clear
+    for ((i=0;i<4;i++))
+    do
+        echo "Masukkan nilai : "$(( $i+1 ))
+        read nilai;
+        satu[$i]=$nilai
+    done
 
- else    # KELUAR PROGAM
-  exit
- fi
+    echo ""
+    echo "Masukkan Data Matriks 2"
+    
+    for ((i=0;i<4;i++))
+    do
+        echo "Masukkan nilai :"$(( $i+1 ))
+        read nilai;
+        dua[$i]=$nilai
+    done
+    clear
+
+    echo "Matriks Satu"
+    echo -e " ${satu[0]} ${satu[1]} \n"
+    echo -e " ${satu[2]} ${satu[3]} \n"
+echo "Hasil perkalian"
+    for ((i=0; i<4; i++))
+    do
+        echo -n "${matriks[$i]} "
+        if [ $i == 1 ]
+        then
+        echo ""
+        fi
+    done
+    
+    unset matriks
+    read
+    
+    elif [ $pilihan -eq 4 ]
+    then
+    exit=1;
+    fi
+
 done
