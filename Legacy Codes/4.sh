@@ -1,171 +1,70 @@
-clear
-i=0
-declare -a nama
+IP=0;
+jumlah=0;
+loop=1;
+index_mhs=0;
+index_mk1=0;
+index_mk2=0;
+
+declare -a nilai
+declare -a mk1
+declare -a mk2
+declare -a ip
 declare -a npm
-declare -a jur
 
-while :;
-do
- echo -e "Menu : \n\n1. Input\n2. View\n3. Search\n4. Delete\n5. Exit\n"
-  echo -n "Masukkan pilihan : "
-  read pilih
+while [[ loop -eq 1 ]]; do
+    echo "Menu Program Praktikum : ";
+    echo "1. Input data mahasiswa";
+    echo "2. input data nilai mata kuliah";
+    echo "3. view data mahasiswa dan nilai";
+    echo "4. view data mahasiswa dengan IP";
+    echo "5. Keluar Program";
+    read temp;
 
-  if (("$pilih" == 1));   # INPUT DATA
-  then
-    clear
-    echo -n "Masukkan Nama    : "
-    read nama[$i]
-    echo -n "Masukkan NPM     : "
-    read npm[$i]
-    echo -n "Masukkan Jurusan : "
-    read jur[$i]
-    i=`expr $i + 1`
-
-  if (("$i" >= 2))
-  then
-   for (( g=0; g<i-1; g++ ))
-   do
-       if (( "${npm[$i-1]}" == "${npm[g]}" ))
-    then
-          echo -e "\nNPM sudah ada!\nMasukan NPM lain!"
-     read
-     unset nama[$i-1]
-     unset jur[$i-1]
-     unset npm[$i-1]
-     i=`expr $i - 1`
-     break
-       fi
-   done
-  fi
-    clear
-
-  elif (("$pilih" == 2));   # TAMPILKAN DATA
-  then
-    if (( i == 0 ))
-    then
-      clear
-      echo "Tidak ada data yang dapat ditampilkan"
-      read
-      clear
-    else
-      clear
-      echo -e "Data yang telah dimasukkan : \n"
-
-      for (( q=0; q<i;q++  ))
-      do
-        echo -e "Data ke $[q+1]\nNama    : ${nama[q]}\nNPM     : ${npm[q]}\nJurusan : ${jur[q]}\n"
-      done
-      read
-      clear
-    fi
-
-  elif (("$pilih" == 3));   # CARI DATA
-  then
-    if (( i == 0))
-    then
-      clear
-      echo "Tidak ada data yang dapat dicari"
-      read
-      clear
-    else
-      clear
-         echo -n "Masukkan NPM mahasiswa yang ingin dicari : "
-         read cari
-
-         k=0
-         while (($cari != ${npm[$k]}))
-         do
-        k=`expr $k + 1`
-         done
-
-      if (($cari == ${npm[$k]}));
-      then
-        echo -e "\nNama    : ${nama[k]}\nNPM     : ${npm[k]}\nJurusan : ${jur[k]}"
-
-      else
+    case "$temp" in
+        "1" )
         clear
-        echo -e "Data tidak ditemukan"
-      fi
-      read
-         clear
-    fi
-
-  elif (("$pilih" != 4 && "$pilih" != 2 && "$pilih" != 1 && "$pilih" != 3       && "$pilih" != 5));   # APABILA MEMBERIKAN MASUKAN SELAIN 1-5
-  then
-    echo "Pilihan tidak valid"
-    read
-    clear
-
- elif (( "$pilih" == 4 ));   # HAPUS DATA
- then
-  if (( i == 0))
-    then
-      clear
-      echo "Tidak ada data yang dapat dihapus"
-      read
-      clear
-    else
-      clear
-   echo -e "Data yang telah dimasukkan : \n"
-      for (( q=0; q<i;q++  ))
-      do
-        echo -e "Data ke $[q+1]\nNama    : ${nama[q]}\nNPM     : ${npm[q]}\nJurusan : ${jur[q]}\n"
-      done
-
-   echo -n "Masukkan NPM mahasiswa yang ingin dihapus : "
-         read cari
-
-         k=0
-         while (($cari != ${npm[$k]}))
-         do
-        k=`expr $k + 1`
-         done
-
-      if (($cari == ${npm[$k]}));
-      then
-        unset nama[k]
-    unset npm[k]
-    unset jur[k]
-
-    if [[ -z ${npm[k]} ]]
-    then
-     if (($i == 1))
-     then
-      i=0
-
-     elif (($i == 2))
-     then
-      for ((f=$k; f<i; f++))
-      do
-       nama[f]=${nama[$f+1]}
-       npm[f]=${npm[$f+1]}
-       jur[f]=${jur[$f+1]}
-      done
-      i=`expr $i - 1`
-
-     elif (($i > 2))
-     then
-      if [[ -n ${npm[$k-1]} ]]
-      then
-       for (( d=$k; d<i; d++ ))
-       do
-        nama[d]=${nama[$d+1]}
-        npm[d]=${npm[$d+1]}
-        jur[d]=${jur[$d+1]}
-       done
-      fi
-      i=`expr $i - 1`
-     fi
-    fi
-      else
+        echo "Input Npm mahasiswa";
+        read npm[$index_mhs];
+        let index_mhs=$index_mhs+1;
+            ;;
+        "2" )
         clear
-        echo -e "Data tidak ditemukan"
-      fi
-      read
-         clear
-    fi
+        echo "Nilai Sistem Operasi : "
+        read mk1[$index_mk1];
+        let index_mk1=$index_mk1+1;
 
-  else    # KELUAR PROGAM
-    exit
-  fi
+        echo "Nilai Bela Negara : "
+        read mk2[$index_mk2];
+        let index_mk2=$index_mk2+1;
+            ;;
+        "3" )
+        clear
+        for (( i = 0; i < $index_mhs; i++ )); do
+            echo "NPM : ${npm[$i]}";
+ echo "Nilai Sistem Operasi : ${mk1[$i]}";
+            echo "Nilai Bela Negara : ${mk2[$i]}";
+            echo ""
+        done
+            ;;
+        "4" )
+        clear
+        for (( i = 0; i < $index_mhs; i++ )); do
+            if [[ $index_mk1 -eq 0 ]]; then
+                echo "data invalid"
+            else
+                let jumlah=${mk1[$i]}+${mk2[$i]};
+                let IP=$jumlah/2;
+
+                echo "NPM : ${npm[$i]}";
+                echo "IP : $IP";
+                echo ""
+            fi
+
+        done
+            ;;
+        "5" )
+        let loop=2;
+            ;;
+    esac
+
 done
