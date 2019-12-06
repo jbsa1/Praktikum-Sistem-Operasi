@@ -1,224 +1,191 @@
-clear
-i=0
-declare -a nama
-declare -a kode
-declare -a lahir
-declare -a mati
-declare -a agama
+index_usr=1;
+index_mhs=1;
+temp_mhs=1;
+temp_npm=1;
+temp_index=1;
+loop=1;
+loop1=1;
+loop_main=1;
+loop_menu=1;
+check=0;
+max=0;
+usr_control=2;
 
-cetak()
-{
-	echo -e "Data yang telah dimasukkan : \n"			
-		for (( q=0; q<i;q++  ))
-		do
-			echo -e "Data ke $[q+1]\nNama Mayat            : ${nama[q]}\nNomor Kematian        : ${kode[q]}\nTempat, tanggal lahir : ${lahir[q]}\nTempat, tanggal wafat : ${mati[q]}\nAgama                 : ${agama[q]}\n"
-		done
+declare -a usr;
+declare -a pass;
+declare -a namamhs;
+declare -a npm;
+
+daftar (){
+clear
+echo "---------------- DAFTAR ----------------"
+let loop=1;												#inisialisasi loop
+while [[ $loop -eq 1 ]]; do
+  read -p "Masukkan username 	: " temp_usr;			#input username
+  let max=$index_usr-1;
+  for (( i = 0; i < $index_usr; i++ )); do
+    if [[ $temp_usr == ${usr[$i]} ]]; then			#cek apabila username telah terpakai atau belum
+      echo "Username sudah digunakan!";
+      read
+      clear
+    elif [[ $i == $max ]]; then
+      #statements
+      let loop=0;
+      break;
+    fi
+  done
+done
+let loop=1;												#inisialisasi loop
+while [[ $loop -eq 1 ]]; do
+  read -sp "Masukkan Password	: " temp_pass1;			#input Password
+  let check=0;										#inisialisiasi flag untuk cek password
+  let max=$index_usr-1;
+  for (( i = 0; i < $index_usr; i++ )); do
+    if [[ ${pass[$i]} == $temp_pass1 ]]; then
+      echo "password sudah digunakan";
+      break;
+    elif [[ $i == $max ]]; then
+      echo "Sudah Oke!!";
+      let check=1;
+      break;
+    fi
+  done											#spacing
+  read -sp "Masukkan kembali Password : " temp_pass2;
+  if [[ $temp_pass1 == $temp_pass2 ]]; then
+    if [[ $check == 0 ]]; then
+      echo "Password sudah terdaftar oleh username lain";
+    else
+      echo "Okeysip"
+      usr[$index_usr]=$temp_usr;
+      pass[$index_usr]=$temp_pass1;
+      change_control $index_usr
+      let index_usr=$index_usr+1;
+      let loop=0;
+    fi
+
+  else
+    echo "Password yang anda masukkan tidak sesuai"
+  fi
+
+done
 }
 
-while :;
-do
-	echo -e "Sistem Informasi Data Mayat pada Tempat Pemakaman Umum\n\n1. Masukkan data mayat\n2. Lihat data mayat\n3. Cari data mayat\n4. Perbarui data mayat\n5. Hapus data mayat\n6. Keluar program\n"
- 	echo -n "Masukkan pilihan : "
- 	read pilih
+login(){
+	let loop=1;
 
- 	if (("$pilih" == 1));   # INPUT DATA
- 	then 
-  		clear
- 	 	echo -n "Nama Mayat            : "
- 	 	read nama[$i]
- 	 	echo -n "Nomor Kematian        : "
-  		read kode[$i]
-	  	echo -n "Tempat, tanggal lahir : "
-  		read lahir[$i]
-		echo -n "Tempat, tanggal wafat : "
-  		read mati[$i]
-	  	echo -n "Agama                 : "
-  		read agama[$i]
- 	 	i=`expr $i + 1`
-		
-		if (("$i" >= 2))
-		then
-			for (( g=0; g<i-1; g++ ))
-			do
-	   			if (( "${kode[$i-1]}" == "${kode[g]}" ))
-				then
-		     			echo -e "\nNomor kematian ini sudah terdaftar!\nMasukan nomor yang lain!"
-					read
-					unset nama[$i-1]
-					unset kode[$i-1]
-					unset lahir[$i-1]
-					unset mati[$i-1]
-					unset agama[$i-1]
-					i=`expr $i - 1`
-					break
-	   			fi
-			done
-		fi
- 	 	clear
- 
- 	elif (("$pilih" == 2));   # TAMPILKAN DATA
- 	then
-  		if (( i == 0 ))
-  		then
-   			clear
-   			echo "Tidak ada data yang dapat ditampilkan"
-   			read
-   			clear
-  		else
-   			clear
-   			cetak
-   			read
-   			clear
-  		fi
-
- 	elif (("$pilih" == 3));   # CARI DATA
- 	then
-  		if (( i == 0))
-  		then
-   			clear
-   			echo "Tidak ada data yang dapat dicari"
-   			read
-   			clear
-  		else  
-   			clear
-      			echo -n "Masukkan nomor kematian yang ingin dicari : "
-      			read cari
-   
-      			k=0
-      			while (($cari != ${kode[$k]}))
-      			do
-    				k=`expr $k + 1`
-      			done
-      
-   			if (($cari == ${kode[$k]}));
-   			then
-    				echo -e "Nama Mayat            : ${nama[k]}\nNomor Kematian        : ${kode[k]}\nTempat, tanggal lahir : ${lahir[k]}\nTempat, tanggal wafat : ${mati[k]}\nAgama                 : ${agama[k]}\n"   
-
-   			else
-    				clear    
-    				echo -e "Data tidak ditemukan"
-   			fi
-   			read
-      			clear
-  		fi
-   
- 	elif (("$pilih" != 4 && "$pilih" != 2 && "$pilih" != 1 && "$pilih" != 3 && "$pilih" != 5 && "$pilih" != 6));   # APABILA MEMBERIKAN MASUKAN SELAIN 1-6
- 	then
-  		echo "Pilihan tidak valid"
-  		read
-  		clear
-
-	elif (( "$pilih" == 5 ));   # HAPUS DATA
-	then
-		if (( i == 0))
-  		then
-   			clear
-   			echo "Tidak ada data yang dapat dihapus"
-   			read
-   			clear
-  		else  
-   			clear
-   			cetak
-			echo -n "Masukkan nomor kematian : "
-      			read cari
-   
-      			k=0
-      			while (($cari != ${kode[$k]}))
-      			do
-    				k=`expr $k + 1`
-      			done
-      
-   			if (($cari == ${kode[$k]}));
-   			then			
-    				unset nama[k]
-				unset kode[k]
-				unset lahir[k]
-				unset mati[k]
-				unset agama[k]
-
-				if [[ -z ${kode[k]} ]]
-				then
-					if (($i == 1))
-					then
-						i=0
-	
-					elif (($i == 2))
-					then
-						for ((f=$k; f<i; f++))
-						do
-							nama[f]=${nama[$f+1]}
-							kode[f]=${kode[$f+1]}
-							lahir[f]=${lahir[$f+1]}
-							mati[f]=${mati[$f+1]}
-							agama[f]=${agama[$f+1]}
-						done
-						i=`expr $i - 1`
-
-					elif (($i > 2))
-					then
-						if [[ -n ${kode[$k-1]} ]]
-						then
-							for (( d=$k; d<i; d++ ))
-							do
-								nama[d]=${nama[$d+1]}
-								kode[d]=${kode[$d+1]}
-								lahir[d]=${lahir[$d+1]}
-								mati[d]=${mati[$d+1]}
-								agama[d]=${agama[$d+1]}
-							done
-						fi
-						i=`expr $i - 1`
-					fi									
+	while [[ $loop == 1 ]]; do
+		clear
+		echo "-----------Login--------------"
+		read -p "Masukkan username 	: " temp_usr;
+		read -sp "Password 		: " temp_pass;
+		let max=$index_usr-1;
+		echo "$max";
+		for (( i = 0; i < $index_usr ; i++ )); do
+			if [[ $temp_usr == ${usr[$i]} ]]; then
+				if [[ $temp_pass == ${pass[$i]} ]]; then
+					clear
+					echo "Login Berhasil !!";
+					echo "Selamat datang ${usr[$i]}!!";
+					let temp_index=$i;
+					let loop=0;
+					break;
+				elif [[ $i == $max ]]; then
+					echo "Maaf Password salah!"
+					echo "Silakan Login Kembali"
 				fi
-   			else
-    				clear    
-    				echo -e "Data tidak ditemukan"
-   			fi
-   			read
-      			clear
-  		fi
+			elif [[ $i == $max ]]; then
+				echo "Maaf username anda tidak terdaftar!!!"
+				echo "LOGIN LAGI SANA!!"
+			fi
+		done
+		read
+	done
+}
 
-	elif (("$pilih" == 4));   # MEMPERBAHARUI DATA
-	then
-		if (( i == 0))
-  		then
-   			clear
-   			echo "Tidak ada data yang dapat diperbarui"
-   			read
-   			clear
-  		else  
-   			clear
-			cetak
-      			echo -e -n "\nMasukkan nomor kematian yang ingin diperbarui : "
-      			read baru
-   
-      			l=0
-      			while (($baru != ${kode[$l]}))
-      			do
-    				l=`expr $l + 1`
-      			done
-      
-   			if (($baru == ${kode[$l]}));
-   			then
-				echo -n "Nama Mayat            : "
-		 	 	read nama[$l]
-			  	echo -n "Tempat, tanggal lahir : "
-		  		read lahir[$l]
-				echo -n "Tempat, tanggal wafat : "
-		  		read mati[$l]
-			  	echo -n "Agama                 : "
-		  		read agama[$l]
+DaftarMhs(){
+  echo "---------------- PENDAFTARAN MAHASISWA ----------------"
+  let loop=1;												#inisialisasi loop
+  while [[ $loop -eq 1 ]]; do
+    read -p "Masukkan nama mahasiswa 	: " temp_mhs;			#input nama MAHASISWA
+    let max=$index_mhs-1;
+    for (( i = 0; i < $index_mhs; i++ )); do
+      if [[ $temp_mhs == ${namamhs[$i]} ]]; then			#cek apabila Nama sudah digunakan atau belum
+        echo "Nama sudah digunakan!";
+        read
+        clear
+      elif [[ $i == $max ]]; then
+        let loop=0;
+        break;
+      fi
+    done
+      namamhs[$index_mhs]=$temp_mhs;
+  done
+  let loop=1;												#inisialisasi loop
+  while [[ $loop -eq 1 ]]; do
+    read -p "Masukkan NPM mahasiswa 	: " temp_npm;			#input nama MAHASISWA
+    let max=$index_mhs-1;
+    for (( i = 0; i < $index_mhs; i++ )); do
+      if [[ $temp_npm == ${npm[$i]} ]]; then			#cek apabila Nama sudah digunakan atau belum
+        echo "NPM sudah digunakan oleh Mahasiswa lain!!";
+        read
+        clear
+      elif [[ $i == $max ]]; then
+        let loop=0;
+        break;
+      fi
+      let loop=1;
+    done
+  done
+  npm[$index_mhs]=$temp_npm;
+  let index_mhs=$index_mhs+1;
+}
+view(){
+	echo "_____________________________"
+  echo " NAMA MAHASISWA | NPM MAHASISWA"
+	for (( i = 1; i < $index_mhs; i++ )); do
+		  echo "----------------------------"
+			echo "${namamhs[$i]}	|	${npm[$i]}"
 
- 	 			clear
-   			else
-    				clear    
-    				echo -e "Data tidak ditemukan"
-				read
-   			fi
-      			clear
-  		fi
- 
- 	else    # KELUAR PROGAM
-  		exit
- 	fi
+	done
+	read
+}
+menu(){
+  loop_menu=1;
+	while [[ $loop_menu == 1 ]]; do
+		clear
+    echo "Sistem Pendaftaran Mahasiswa"
+    echo "1. Daftarkan Mahasiswa "
+    echo "2. Lihat Mahasiswa terdaftar"
+    echo "3. Log Out"
+    read temp_case;
+
+    case "$temp_case" in
+      "1" )
+      DaftarMhs
+        ;;
+      "2" )
+      view
+        ;;
+      "3" )
+      let loop_menu=0
+        ;;
+    esac
+done
+}
+let loop_main=1;
+while [[ $loop_main == 1 ]]; do
+	clear
+	read -p "apakah anda adalah user terdaftar ? (1. Yes/ 2. No) Press 3 to quit" prep;
+  echo ""
+	if [[ $prep == 1 ]]; then
+		login
+		menu
+	elif [[ $prep == 2 ]]; then
+		daftar
+		login
+		menu
+	elif [[ $prep == 3 ]]; then
+		let loop_main=0;
+	fi
+
 done
